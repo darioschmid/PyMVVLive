@@ -32,16 +32,3 @@ def punctuality(line):
     #print(f"{line_punctuality=}")
 
     return line_punctuality
-
-
-if __name__ == "__main__":
-    print("Testing punctuality.py")
-    print(punctuality("S1"))
-    print(punctuality("S2"))
-    print(punctuality("S3"))
-    print(punctuality("S4"))
-    print(punctuality("S6"))
-    print(punctuality("S7"))
-    print(punctuality("S8"))
-    print(punctuality("S20"))
-    print("Done testing punctuality.py")
