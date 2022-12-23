@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="mypythonlib",
+    name="mvv_sbahn",
     packages=find_packages(include=["mvv_sbahn"]),
     version="0.0.1",
     description="MVV S-Bahn Departures",

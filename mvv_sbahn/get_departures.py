@@ -1,4 +1,3 @@
-import json
 import requests
 
 
@@ -26,8 +25,3 @@ def get_departures(station_name, station_id=None, destination_blacklist=None, de
         departures = [x for x in departures if x["destination"] in destination_whitelist]
 
     return departures
-
-
-if __name__ == "__main__":
-    departures = get_departures("Unterhaching", destination_blacklist=["Holzkirchen"])
-    print(json.dumps(departures, indent=4, sort_keys=True))
