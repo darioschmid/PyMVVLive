@@ -30,5 +30,6 @@ def punctuality(line):
     # Select punctuality column
     line_punctuality = line_columns[2].text
     #print(f"{line_punctuality=}")
+    line_punctuality = line_punctuality.replace(" %", "")
 
     return line_punctuality
