@@ -1,7 +1,7 @@
 mvv_sbahn
 =========
 
-Python-Library to get punctuality information for S-Bahns in munich from mvv.de. Relies on scraping a website due to the lack of official API in this specific case.
+Python-Library to get punctuality information for S-Bahns in munich from hafas.de. Relies on scraping a website due to the lack of official API in this specific case.
 This project *not* associated with neither MVV, MVG, Deutsche Bahn, etc.
 
 
