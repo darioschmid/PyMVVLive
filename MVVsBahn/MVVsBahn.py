@@ -16,7 +16,6 @@ class MVVsBahn(object):
                 f"Line {line} not available. Available lines are: {available_lines}"
             )
 
-        #
         line_number = line[1:]
 
         url = "http://s-bahn-muenchen.hafas.de/bin/540/query.exe/dn?statusWidget"
