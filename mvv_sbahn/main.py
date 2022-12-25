@@ -1,20 +1,11 @@
 import punctuality
-import mqtt_publish
+#import mqtt_publish
 import get_departures
 import math
 import logging
 #import json
-# DELETEME
-import paho.mqtt.client as mqtt
 
-# DELETEME
-MQTT_BROKER = "homeassistant"
-MQTT_PORT = 1883
-client = mqtt.Client("ha-client")
-client.username_pw_set(username="python_s_bahn_script",  password="5qChAzNvVhihGqCmd23ej2Pxv")
-client.connect(MQTT_BROKER, MQTT_PORT)
-
-logging.basicConfig(filename='mvv_sbahn.log', encoding='utf-8', level=logging.DEBUG, format='%(asctime)s - %(levelname)s %(message)s')
+logging.basicConfig(filename='mvv_sbahn.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s %(message)s')  # Commented out "encoding='utf-8'" because it caused an error
 
 destination_blacklist = ["Taufkirchen", "Furth", "Deisenhofen", "Sauerlach", "Otterfing", "Holzkirchen"]
 disruption_key_words = ["Verzögerung", "Verspätung", "Reparatur", "Stellwerk", "Weiche", "Störung"]
@@ -65,18 +56,3 @@ logging.info(f"{max_delay=}")
 logging.info(f"{cancellations=}")
 logging.info(f"{reliability=}")
 
-# DELETEME
-message = client.publish("home-assistant/SBahn/disruptions", disruptions)
-message.wait_for_publish()
-message = client.publish("home-assistant/SBahn/punctuality", punctuality)
-message.wait_for_publish()
-message = client.publish("home-assistant/SBahn/max_delay", max_delay)
-message.wait_for_publish()
-message = client.publish("home-assistant/SBahn/cancellations", cancellations)
-message.wait_for_publish()
-message = client.publish("home-assistant/SBahn/test", cancellations)
-message.wait_for_publish()
-message = client.publish("home-assistant/SBahn/reliability", reliability)
-message.wait_for_publish()
-
-client.disconnect()
