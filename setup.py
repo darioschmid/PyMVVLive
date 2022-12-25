@@ -6,9 +6,10 @@ setup(
     version="0.0.1",
     description="MVV S-Bahn Departures",
     author="Dario Schmid",
-    license="MIT",
-    install_requires=['beautifulsoup4==4.11.1', 'paho-mqtt==1.6.1 '],
+    license="?",
+    install_requires=['beautifulsoup4==4.11.1', 'requests'],
     setup_requires=['pytest-runner'],
     tests_require=['pytest==4.4.1'],
     test_suite='tests',
+    url='https://github.com/darioschmid/mvv_sbahn',
 )
