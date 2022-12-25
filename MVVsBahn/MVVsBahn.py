@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-class mvv_sbahn(object):
+class MVVsBahn(object):
     def __init__(self):
         pass
 

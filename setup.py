@@ -6,6 +6,7 @@ setup(
     version="0.0.1",
     description="MVV S-Bahn Departures",
     author="Dario Schmid",
+    author_email="darioschmid99@outlook.com",
     license="?",
     install_requires=['beautifulsoup4==4.11.1', 'requests'],
     setup_requires=['pytest-runner'],
