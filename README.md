@@ -6,7 +6,7 @@ This project *not* associated with neither MVV, MVG, Deutsche Bahn, etc.
 
 
 ## mvv_sbahn.get_punctuality()
-Retrieve the next departures from mvg-live.de
+Retrieve the next departures from http://s-bahn-muenchen.hafas.de/bin/540/query.exe/dn?&statusWidget.
 
 Configuration variables:
  
