@@ -1,8 +1,8 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="mvv_sbahn",
-    packages=find_packages(include=["mvv_sbahn"]),
+    name="MVVsBahn",
+    packages=find_packages(include=["MVVsBahn"]),
     version="0.0.1",
     description="MVV S-Bahn Departures",
     author="Dario Schmid",
@@ -12,5 +12,5 @@ setup(
     setup_requires=['pytest-runner'],
     tests_require=['pytest==4.4.1'],
     test_suite='tests',
-    url='https://github.com/darioschmid/mvv_sbahn',
+    url='https://github.com/darioschmid/MVVsBahn',
 )

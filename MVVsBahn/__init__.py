@@ -1,1 +1,1 @@
-from mvvSbahn.mvvSbahn import mvvSbahn
+from MVVsBahn.MVVsBahn import MVVsBahn
