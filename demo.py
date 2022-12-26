@@ -11,12 +11,12 @@ print(f"{line}: {live.get_punctuality(line)} %")
 
 
 # Serving Lines Demo
-station = "Garching Forschungszentrum"
+stop_id = "de:09184:460"  # stop ID of "Garching Forschungszentrum"
 whitelist_serving_lines = {
     "lineNumber": ["U6", "230", "X201"],
 }
-serving_lines = live.get_serving_lines(stop_name=station, whitelist=whitelist_serving_lines)
-print(f"{station} serving lines: {json.dumps(serving_lines, indent=4, sort_keys=True)}")
+serving_lines = live.get_serving_lines(stop_id=stop_id, whitelist=whitelist_serving_lines)
+print(f"{stop_id} serving lines: {json.dumps(serving_lines, indent=4, sort_keys=True)}")
 
 
 # Departues Demo
