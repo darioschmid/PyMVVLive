@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 setup(
     name="MVVLive",
     packages=find_packages(include=["MVVLive"]),
-    version="0.0.1",
+    version="0.0.2",
     description="Live MVV data for Munich public transport",
     author="Dario Schmid",
     author_email="darioschmid99@outlook.com",
