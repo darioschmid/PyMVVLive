@@ -54,7 +54,7 @@ class MVVLive(object):
 
         return line_punctuality
 
-    def get_data(self, stop_name=None, stop_id=None):
+    def __get_data(self, stop_name=None, stop_id=None):
         """Returns a dictionary of the following format:
         {
             "servingLines": servingLines,
@@ -91,14 +91,13 @@ class MVVLive(object):
                     f"Error while fetching data from MVV website. Status code: {stop_response.status_code}"
                 )
             stop_id = stop_response.json()['locations'][0]['id']
-            #print(f"stop ID: {stop_id}")
         
-        departures_response = requests.get(f"https://www.mvg.de/api/fahrinfo/departure/{stop_id}?footway=0")
-        departures = departures_response.json()
+        data_response = requests.get(f"https://www.mvg.de/api/fahrinfo/departure/{stop_id}?footway=0")
+        data = data_response.json()
 
-        return departures
+        return data
     
-    def filter(self, data, whitelist=None, blacklist=None):
+    def __filter(self, data, whitelist=None, blacklist=None):
         """Filters data (servingLines or departures) according to a whitelist or blacklist.
 
         Args:
@@ -108,7 +107,7 @@ class MVVLive(object):
             blacklist (dict, optional): Blacklist dict according to which will be filtered. Its values need to be lists.
                                         See README.md for more details. Defaults to None.
         Returns:
-            _type_: Returns a filtered list data.
+            dict: Returns filtered list data.
         """
 
         if blacklist is not None:
@@ -119,3 +118,63 @@ class MVVLive(object):
             filtered_data = data
         
         return filtered_data
+
+    def get_departures(self, stop_name=None, stop_id=None, whitelist=None, blacklist=None):
+        """Returns a list of departure dicts.
+
+        Args:
+            stop_name (str, optional): Stop name. Will be used to find stop id. To be sure the correct stop is identified,
+                                       look it up yourself at https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}.
+                                       Defaults to None. Must be provided if stop_id is not provided.
+            stop_id (str, optional): Stop ID according to GTFS standard.
+                                     Look up your stop's ID here: https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}.
+                                     Examples are: "de:09162:2" for Marienplatz, "de:09162:6" for Hauptbahnhof,
+                                     "de:09162:1" for Karlsplatz (Stachus), "de:09184:460" for Garching-Forschungszentrum, etc.
+                                     Defaults to None. Must be provided if stop_name is not provided.
+            whitelist (dict, optional): Whitelist dict according to which will be filtered. Its values need to be lists.
+                                        See README.md for more details. Defaults to None.
+            blacklist (dict, optional): Blacklist dict according to which will be filtered. Its values need to be lists.
+                                        See README.md for more details. Defaults to None.
+
+        Raises:
+            ValueError: If neither stop_name nor stop_id is provided.
+
+        Returns:
+            list: list of departure dicts.
+        """
+
+        data = self.__get_data(stop_name, stop_id)
+        departures = data['departures']
+        departures = self.__filter(departures, whitelist, blacklist)
+
+        return departures
+    
+    def get_serving_lines(self, stop_name=None, stop_id=None, whitelist=None, blacklist=None):
+        """Returns a list of serving line dicts.
+
+        Args:
+            stop_name (str, optional): Stop name. Will be used to find stop id. To be sure the correct stop is identified,
+                                       look it up yourself at https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}.
+                                       Defaults to None. Must be provided if stop_id is not provided.
+            stop_id (str, optional): Stop ID according to GTFS standard.
+                                     Look up your stop's ID here: https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}.
+                                     Examples are: "de:09162:2" for Marienplatz, "de:09162:6" for Hauptbahnhof,
+                                     "de:09162:1" for Karlsplatz (Stachus), "de:09184:460" for Garching-Forschungszentrum, etc.
+                                     Defaults to None. Must be provided if stop_name is not provided.
+            whitelist (dict, optional): Whitelist dict according to which will be filtered. Its values need to be lists.
+                                        See README.md for more details. Defaults to None.
+            blacklist (dict, optional): Blacklist dict according to which will be filtered. Its values need to be lists.
+                                        See README.md for more details. Defaults to None.
+
+        Raises:
+            ValueError: If neither stop_name nor stop_id is provided.
+
+        Returns:
+            list: list of serving line dicts.
+        """
+
+        data = self.__get_data(stop_name, stop_id)
+        serving_lines = data['servingLines']
+        serving_lines = self.__filter(serving_lines, whitelist, blacklist)
+
+        return serving_lines
