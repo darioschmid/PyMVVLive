@@ -98,24 +98,24 @@ class MVVLive(object):
 
         return departures
     
-    def filter_departures(self, departures, whitelist=None, blacklist=None):
-        """Filters a list of departures according to a whitelist or blacklist.
+    def filter(self, data, whitelist=None, blacklist=None):
+        """Filters data (servingLines or departures) according to a whitelist or blacklist.
 
         Args:
-            departures (list): List of departure dicts.
+            data (list): List of data dicts, e.g. departures.
             whitelist (dict, optional): Whitelist dict according to which will be filtered. Its values need to be lists.
                                         See README.md for more details. Defaults to None.
             blacklist (dict, optional): Blacklist dict according to which will be filtered. Its values need to be lists.
                                         See README.md for more details. Defaults to None.
         Returns:
-            _type_: Returns a filtered list departures.
+            _type_: Returns a filtered list data.
         """
 
         if blacklist is not None:
-            filtered_departues = [departure for departure in departures if not any(departure[key] in value for key, value in blacklist.items())]
+            filtered_data = [x for x in data if not any(x[key] in value for key, value in blacklist.items())]
         if whitelist is not None:
-            filtered_departues = [departure for departure in departures if any(departure[key] in value for key, value in whitelist.items())]
+            filtered_data = [x for x in data if any(x[key] in value for key, value in whitelist.items())]
         if blacklist is None and whitelist is None:
-            filtered_departues = departures
+            filtered_data = data
         
-        return filtered_departues
+        return filtered_data
