@@ -1,10 +1,10 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="MVVsBahn",
-    packages=find_packages(include=["MVVsBahn"]),
+    name="MVVLive",
+    packages=find_packages(include=["MVVLive"]),
     version="0.0.1",
-    description="MVV S-Bahn Departures",
+    description="Live MVV data for Munich public transport",
     author="Dario Schmid",
     author_email="darioschmid99@outlook.com",
     license="?",
@@ -12,5 +12,5 @@ setup(
     setup_requires=['pytest-runner'],
     tests_require=['pytest==4.4.1'],
     test_suite='tests',
-    url='https://github.com/darioschmid/MVVsBahn',
+    url='https://github.com/darioschmid/MVVLive',
 )
