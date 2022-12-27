@@ -111,13 +111,11 @@ class MVVLive(object):
         """
 
         if blacklist is not None:
-            filtered_data = [x for x in data if not any(x[key] in value for key, value in blacklist.items())]
+            data = [x for x in data if not any(x[key] in value for key, value in blacklist.items())]
         if whitelist is not None:
-            filtered_data = [x for x in data if any(x[key] in value for key, value in whitelist.items())]
-        if blacklist is None and whitelist is None:
-            filtered_data = data
+            data = [x for x in data if any(x[key] in value for key, value in whitelist.items())]
         
-        return filtered_data
+        return data
 
     def get_departures(self, stop_name=None, stop_id=None, whitelist=None, blacklist=None):
         """Returns a list of departure dicts.
