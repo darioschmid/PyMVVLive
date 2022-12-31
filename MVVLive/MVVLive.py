@@ -20,7 +20,7 @@ class MVVLive(object):
             self.update_data()
         if self.line is not None:
             self.update_punctuality()
-        self.punctuality = None
+        self._punctuality = None
         self.data = None
 
     def update_data(self):
@@ -92,14 +92,14 @@ class MVVLive(object):
         line_punctuality = line_columns[2].text
 
         if line_punctuality == "-":
-            self.punctuality = line_punctuality
+            self._punctuality = line_punctuality
             return
         
         # Formatting
         line_punctuality = line_punctuality.replace(" %", "")
         line_punctuality = int(line_punctuality)
 
-        self.punctuality = line_punctuality
+        self._punctuality = line_punctuality
 
         return
   
@@ -141,7 +141,7 @@ class MVVLive(object):
     @property
     def punctuality(self):
         """Returns punctuality of S-Bahn line."""
-        return self.punctuality
+        return self._punctuality
 
     @data.setter
     def data(self, value):

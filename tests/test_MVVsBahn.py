@@ -8,7 +8,7 @@ def test_MVVLive():
     live = MVVLive.MVVLive(stop_name=station, line=line)
 
     # Test get_punctuality
-    assert live.punctuality in range(0, 101)
+    assert live._punctuality in range(0, 101)
 
     # Test get_serving_lines
     whitelist_serving_lines = {
