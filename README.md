@@ -27,7 +27,7 @@ pip install MVVLive
 
 ### `MVVLive.punctuality`
 
-Get punctuality information about a certain S-Bahn line. See [below](###example-output-of-`mvvlive.punctuality`) for example output.
+Get punctuality information about a certain S-Bahn line. See [below](#example-output-of-mvvlivepunctuality) for example output.
 
 ```python
 import MVVLive
@@ -42,7 +42,7 @@ print(f"{line}: {live.punctuality} %")
 
 ### `MVVLive.serving_lines`
 
-Get information about all the lines served at a certain public transport stop. See [below](###example-output-of-`mvvlive.serving_lines`) for example output.
+Get information about all the lines served at a certain public transport stop. See [below](#example-output-of-mvvliveserving_lines) for example output.
 
 ```python
 import MVVLive
@@ -67,7 +67,7 @@ determined. Look it up at https://www.mvg.de/api/fahrinfo/location/queryWeb?q=YO
 
 ### `MVVLive.departures`
 
-Get information about all departures at a certain public transport stop. See [below](###example-output-of-`mvvlive.departures`) for example output.
+Get information about all departures at a certain public transport stop. See [below](#example-output-of-mvvlivedepartures) for example output.
 
 ```python
 import MVVLive
