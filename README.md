@@ -25,6 +25,8 @@ pip install MVVLive
 
 ## Usage
 
+See [demo.py](demo.py) for a demo, or see the following documentation.
+
 ### `MVVLive.punctuality`
 
 Get punctuality information about a certain S-Bahn line. See [below](#example-output-of-mvvlivepunctuality) for example output.
