@@ -84,6 +84,14 @@ class MVVLive:
 
         return
 
+    def update_serving_lines(self):
+        self.update_data()
+        return
+    
+    def update_departures(self):
+        self.update_data()
+        return
+
     def update_punctuality(self):
         """Scrapes punctuality off of S-Bahn line from MVV website
         http://s-bahn-muenchen.hafas.de/bin/540/query.exe/dn?statusWidget.

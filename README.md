@@ -1,5 +1,5 @@
-PyMVVLive
-=========
+MVVLive
+=======
 
 This Python library is designed to fetch data about public transportation in Munich, Germany.
 Available data consists of departure and serving line information for every stop in the MVV region, and also punctuality information for S-Bahn lines (S-Bahn München, DB).
@@ -15,21 +15,22 @@ If you have any idea or further information about how to retrieve S-Bahn punctua
 **Disclaimer**: This project is **not** associated with neither MVV, nor MVG, nor Deutsche Bahn.
 
 
-MVVLive
-=======
+Installation
+============
 
-## Install it from PyPI
 ```
 pip install MVVLive
 ```
 
-## Usage
+Usage
+=====
 
 See [demo.py](demo.py) for a demo, or see the following documentation.
 
-### `MVVLive.punctuality`
+## `MVVLive.punctuality`
 
 Get punctuality information about a certain S-Bahn line. See [below](#example-output-of-mvvlivepunctuality) for example output.
+Update this information by executing `MVVLive.update_punctuality()`.
 
 ```python
 import MVVLive
@@ -42,9 +43,10 @@ live = MVVLive.MVVLive(line=line)
 print(live.punctuality)
 ```
 
-### `MVVLive.serving_lines`
+## `MVVLive.serving_lines`
 
 Get information about all the lines served at a certain public transport stop. See [below](#example-output-of-mvvliveserving_lines) for example output.
+Update this information by executing `MVVLive.update_serving_lines()`.
 
 ```python
 import MVVLive
@@ -54,11 +56,7 @@ import json
 stop_id = "de:09184:460"  # stop ID of "Garching Forschungszentrum"
 live = MVVLive.MVVLive(stop_id=stop_id)
 
-# Filter serving lines
-whitelist_serving_lines = {
-    "product": ["REGIONAL_BUS"],
-}
-serving_lines = live.filter(live.serving_lines, whitelist=whitelist_serving_lines)
+serving_lines = live.serving_lines
 
 # Print serving lines in a nicely formatted way.
 print(json.dumps(serving_lines, indent=4, ensure_ascii=False))
@@ -68,9 +66,32 @@ Both blacklist and whitelist can be provided. The must be a dict in the same for
 You can either provide a `stop_name` or a `stop_id`, where the latter is better as you can ensure the right stop is 
 determined. Look it up at https://www.mvg.de/api/fahrinfo/location/queryWeb?q=YOUR_STOP_NAME.
 
-### `MVVLive.departures`
+## `MVVLive.departures`
 
 Get information about all departures at a certain public transport stop. See [below](#example-output-of-mvvlivedepartures) for example output.
+Update this information by executing `MVVLive.update_departures()`.
+
+```python
+import MVVLive
+import json
+
+# Initialize MVVLive object with stop name
+stop_name = "Unterhaching"
+live = MVVLive.MVVLive(stop_name=stop_name)
+
+departures = live.departures
+
+# Print serving lines in a nicely formatted way.
+print(json.dumps(departures, indent=4, ensure_ascii=False))
+```
+
+Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `departures` list, except the value must be a list of values (e.g., `"destination": ["Deisenhofen", "Holzkirchen"]` instead of `"destination": "Deisenhofen"`).
+You can either provide a `stop_name` or a `stop_id`, where the latter is better as you can ensure the right stop is 
+determined. Look it up at https://www.mvg.de/api/fahrinfo/location/queryWeb?q=YOUR_STOP_NAME.
+
+##  `MVVlive.filter()`
+
+Filters data (servingLines or departures) according to a whitelist or blacklist.
 
 ```python
 import MVVLive
@@ -95,9 +116,13 @@ departures = live.filter(live.departures, whitelist=whitelist_departures, blackl
 print(json.dumps(departures, indent=4, ensure_ascii=False))
 ```
 
-Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `departures` list, except the value must be a list of values (e.g., `"destination": ["Deisenhofen", "Holzkirchen"]` instead of `"destination": "Deisenhofen"`).
-You can either provide a `stop_name` or a `stop_id`, where the latter is better as you can ensure the right stop is 
-determined. Look it up at https://www.mvg.de/api/fahrinfo/location/queryWeb?q=YOUR_STOP_NAME.
+## `MVVLive.update_punctuality()`
+
+Updates the punctuality information.
+
+## `MVVLive.update_data()`
+
+Updates the serving lines and departures information.
 
 ## Example Output
 
