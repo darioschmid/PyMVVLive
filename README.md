@@ -120,9 +120,13 @@ print(json.dumps(departures, indent=4, ensure_ascii=False))
 
 Updates the punctuality information.
 
-## `MVVLive.update_data()`
+## `MVVLive.update_serving_lines()`
 
-Updates the serving lines and departures information.
+Updates the serving lines information.
+
+## `MVVLive.update_departures()`
+
+Updates the departures information.
 
 ## Example Output
 
