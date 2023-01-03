@@ -37,7 +37,7 @@ line = "S3"
 live = MVVLive.MVVLive(line=line)
 
 # Print punctuality
-print(f"{line}: {live.punctuality} %")
+print(live.punctuality)
 ```
 
 ### `MVVLive.serving_lines`
@@ -58,7 +58,8 @@ whitelist_serving_lines = {
 }
 serving_lines = live.filter(live.serving_lines, whitelist=whitelist_serving_lines)
 
-print(f"{stop_id} serving lines: {json.dumps(serving_lines, indent=4, ensure_ascii=False)}")
+# Print serving lines in a nicely formatted way.
+print(json.dumps(serving_lines, indent=4, ensure_ascii=False))
 ```
 
 Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `serving_lines` list, except the value must be a list of values (e.g., `"product": ["REGIONAL_BUS"]` instead of `"product": "REGIONAL_BUS"`).
@@ -88,7 +89,8 @@ whitelist_departures = {
 }
 departures = live.filter(live.departures, whitelist=whitelist_departures, blacklist=blacklist_departures)
 
-print(f"{stop_name} departures: {json.dumps(departures, indent=4, ensure_ascii=False)}")
+# Print serving lines in a nicely formatted way.
+print(json.dumps(departures, indent=4, ensure_ascii=False))
 ```
 
 Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `departures` list, except the value must be a list of values (e.g., `"destination": ["Deisenhofen", "Holzkirchen"]` instead of `"destination": "Deisenhofen"`).

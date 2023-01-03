@@ -34,6 +34,7 @@ whitelist_serving_lines = {
 }
 serving_lines = live.filter(live.serving_lines, whitelist=whitelist_serving_lines)
 
+# Print serving lines in a nicely formatted way.
 print(f"{stop_id} serving lines: {json.dumps(serving_lines, indent=4, ensure_ascii=False)}")
 
 
@@ -57,5 +58,6 @@ whitelist_departures = {
 }
 departures = live.filter(live.departures, whitelist=whitelist_departures, blacklist=blacklist_departures)
 
+# Print serving lines in a nicely formatted way.
 print(f"{stop_name} departures: {json.dumps(departures, indent=4, ensure_ascii=False)}")
 
