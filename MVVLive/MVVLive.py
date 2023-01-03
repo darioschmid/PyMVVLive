@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-class MVVLive(object):
+class MVVLive:
     def __init__(self, stop_name=None, stop_id=None, line=None):
         """Initializes MVVLive object.
 
@@ -13,15 +13,50 @@ class MVVLive(object):
 
             line (str): Name of S-Bahn line. Available lines are: "S1", "S2", "S3", "S4", "S6", "S7", "S8", "S20". Defaults to None.
         """
+
+        # Set stop ID. Get it from stop name if not provided.
+        self.stop_id = stop_id
+        if self.stop_id is None:
+            if stop_name is not None:
+                self.stop_id = self.determine_stop_id(stop_name)
+
+        # Set line.
+        self.line = line
+
+        # Update data and punctuality information.
+        self.update_data()
+        self.update_punctuality()
+
+        """
+        print(f"{line}")
         self.stop_name = stop_name
         self.stop_id = stop_id
-        self.line = line
         if self.stop_name is not None or self.stop_id is not None:
             self.update_data()
+        else:
+            self._data = None
         if self.line is not None:
             self.update_punctuality()
+        if self.stop_name is None and self.stop_id is None and self.line is None:
+            print(f"{line}")
+            print(f"{self.line}")
+            raise ValueError("Either stop_name, stop_id or line must be provided.")
         self._punctuality = None
-        self.data = None
+        self._data = None"""
+    
+    def determine_stop_id(self, stop_name):
+        """Determines stop ID from stop name.
+
+        Returns:
+            str: Stop ID.
+        """
+        stop_response = requests.get(f"https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}")
+        if stop_response.status_code != 200:
+            raise ConnectionError(
+                f"Error while fetching data from MVV website. Status code: {stop_response.status_code}"
+            )
+        stop_id = stop_response.json()['locations'][0]['id']
+        return stop_id
 
     def update_data(self):
         """Updates data, which is a dictionary of the following format:
@@ -33,25 +68,18 @@ class MVVLive(object):
 
         Raises:
             ValueError: If neither stop_name nor stop_id is provided.
+            ConnectionError: Error while fetching data from MVV API.
         """
-        
-        stop_name = self.stop_name
-        stop_id = self.stop_id
 
-        if stop_name is None and stop_id is None:
-            raise ValueError("Either stop_name or stop_id must be provided.")
-
-        if stop_id is None:
-            # stop ID not provided, get it from stop name
-            stop_response = requests.get(f"https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}", timeout=20)
-            # exit if response is not 200
-            if stop_response.status_code != 200:
-                raise ConnectionError(
-                    f"Error while fetching data from MVV website. Status code: {stop_response.status_code}"
-                )
-            stop_id = stop_response.json()['locations'][0]['id']
+        if self.stop_id is None:
+            #self.data = None
+            return
         
-        data_response = requests.get(f"https://www.mvg.de/api/fahrinfo/departure/{stop_id}?footway=0")
+        data_response = requests.get(f"https://www.mvg.de/api/fahrinfo/departure/{self.stop_id}?footway=0")
+        if data_response.status_code != 200:
+            raise ConnectionError(
+                f"Error while fetching data from MVV website. Status code: {data_response.status_code}"
+            )
         self.data = data_response.json()
 
         return
@@ -64,6 +92,10 @@ class MVVLive(object):
             ValueError: Line not available
             ConnectionError: Error while fetching data from MVV website.
         """
+
+        if self.line is None:
+            #self.punctuality = None
+            return
 
         line = self.line
 
@@ -92,14 +124,14 @@ class MVVLive(object):
         line_punctuality = line_columns[2].text
 
         if line_punctuality == "-":
-            self._punctuality = line_punctuality
+            self.punctuality = line_punctuality
             return
         
         # Formatting
         line_punctuality = line_punctuality.replace(" %", "")
         line_punctuality = int(line_punctuality)
 
-        self._punctuality = line_punctuality
+        self.punctuality = line_punctuality
 
         return
   
@@ -116,17 +148,13 @@ class MVVLive(object):
             dict: Returns filtered list data.
         """
 
+        filtered_data = data
         if blacklist is not None:
-            data = [x for x in data if not any(x[key] in value for key, value in blacklist.items())]
+            filtered_data = [x for x in filtered_data if not any(x[key] in value for key, value in blacklist.items())]
         if whitelist is not None:
-            data = [x for x in data if any(x[key] in value for key, value in whitelist.items())]
+            filtered_data = [x for x in filtered_data if all(x[key] in value for key, value in whitelist.items())]
         
-        return data
-
-    @property
-    def data(self):
-        """Returns the data dict."""
-        return self.data
+        return filtered_data
 
     @property
     def departures(self):
@@ -137,18 +165,3 @@ class MVVLive(object):
     def serving_lines(self):
         """Returns a list of serving line dicts."""
         return self.data["servingLines"]
-    
-    @property
-    def punctuality(self):
-        """Returns punctuality of S-Bahn line."""
-        return self._punctuality
-
-    @data.setter
-    def data(self, value):
-        """Sets data dict."""
-        self._data = value
-    
-    @punctuality.setter
-    def punctuality(self, value):
-        """Sets punctuality."""
-        self._punctuality = value
