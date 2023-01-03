@@ -31,7 +31,6 @@ Get punctuality information about a certain S-Bahn line. See [below](###example-
 
 ```python
 import MVVLive
-import json
 
 # Initialize MVVLive object with line
 line = "S3"
@@ -62,7 +61,7 @@ serving_lines = live.filter(live.serving_lines, whitelist=whitelist_serving_line
 print(f"{stop_id} serving lines: {json.dumps(serving_lines, indent=4, ensure_ascii=False)}")
 ```
 
-Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `serving_lines` list, except the value must be a list of values (e.g., `"lineNumber": ["U6", "230", "X201"]` instead of `"lineNumber": "U6"`).
+Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `serving_lines` list, except the value must be a list of values (e.g., `"product": ["REGIONAL_BUS"]` instead of `"product": "REGIONAL_BUS"`).
 You can either provide a `stop_name` or a `stop_id`, where the latter is better as you can ensure the right stop is 
 determined. Look it up at https://www.mvg.de/api/fahrinfo/location/queryWeb?q=YOUR_STOP_NAME.
 
@@ -92,7 +91,7 @@ departures = live.filter(live.departures, whitelist=whitelist_departures, blackl
 print(f"{stop_name} departures: {json.dumps(departures, indent=4, ensure_ascii=False)}")
 ```
 
-Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `departures` list, except the value must be a list of values (e.g., `"label": ["U6", "230", "X201"]` instead of `"label": "U6"`).
+Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `departures` list, except the value must be a list of values (e.g., `"destination": ["Deisenhofen", "Holzkirchen"]` instead of `"destination": "Deisenhofen"`).
 You can either provide a `stop_name` or a `stop_id`, where the latter is better as you can ensure the right stop is 
 determined. Look it up at https://www.mvg.de/api/fahrinfo/location/queryWeb?q=YOUR_STOP_NAME.
 
@@ -151,7 +150,7 @@ determined. Look it up at https://www.mvg.de/api/fahrinfo/location/queryWeb?q=YO
 ]
 ```
 
-### Example Output of `MVVLive.get_departures()`
+### Example Output of `MVVLive.departures`
 
 ```python
 [
