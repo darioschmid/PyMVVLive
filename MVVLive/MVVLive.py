@@ -26,23 +26,6 @@ class MVVLive:
         # Update data and punctuality information.
         self.update_data()
         self.update_punctuality()
-
-        """
-        print(f"{line}")
-        self.stop_name = stop_name
-        self.stop_id = stop_id
-        if self.stop_name is not None or self.stop_id is not None:
-            self.update_data()
-        else:
-            self._data = None
-        if self.line is not None:
-            self.update_punctuality()
-        if self.stop_name is None and self.stop_id is None and self.line is None:
-            print(f"{line}")
-            print(f"{self.line}")
-            raise ValueError("Either stop_name, stop_id or line must be provided.")
-        self._punctuality = None
-        self._data = None"""
     
     def determine_stop_id(self, stop_name):
         """Determines stop ID from stop name.
