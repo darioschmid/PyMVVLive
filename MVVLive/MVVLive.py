@@ -7,9 +7,9 @@ class MVVLive:
         """Initializes MVVLive object.
 
         Args:
-            stop_name (_type_, optional): Stop name. Will be used to find stop id. To be sure the correct stop is identified, look it up yourself at https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}. Must be provided if stop_id is not provided. Will be ignored if stop_id is provided. Defaults to None.
+            stop_name (str, optional): Stop name. Will be used to find stop id. To be sure the correct stop is identified, look it up yourself at https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}. Must be provided if stop_id is not provided. Will be ignored if stop_id is provided. Defaults to None.
 
-            stop_id (_type_, optional): Stop ID according to GTFS standard. Look up your stop's ID here: https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}. Examples are: "de:09162:2" for Marienplatz, "de:09162:6" for Hauptbahnhof, "de:09162:1" for Karlsplatz (Stachus), "de:09184:460" for Garching-Forschungszentrum, etc. Must be provided if stop_name is not provided. Defaults to None.
+            stop_id (str, optional): Stop ID according to GTFS standard. Look up your stop's ID here: https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}. Examples are: "de:09162:2" for Marienplatz, "de:09162:6" for Hauptbahnhof, "de:09162:1" for Karlsplatz (Stachus), "de:09184:460" for Garching-Forschungszentrum, etc. Must be provided if stop_name is not provided. Defaults to None.
 
             line (str): Name of S-Bahn line. Available lines are: "S1", "S2", "S3", "S4", "S6", "S7", "S8", "S20". Defaults to None.
         """
