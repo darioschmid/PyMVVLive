@@ -1,5 +1,5 @@
-PyMVVLive
-=========
+MVVLive
+=======
 
 This Python library is designed to fetch data about public transportation in Munich, Germany.
 Available data consists of departure and serving line information for every stop in the MVV region, and also punctuality information for S-Bahn lines (S-Bahn München, DB).
@@ -15,81 +15,128 @@ If you have any idea or further information about how to retrieve S-Bahn punctua
 **Disclaimer**: This project is **not** associated with neither MVV, nor MVG, nor Deutsche Bahn.
 
 
-MVVLive
-=======
+Installation
+============
 
-## Install it from PyPI
 ```
 pip install MVVLive
 ```
 
-## Usage
+Usage
+=====
 
-### `MVVLive.get_punctuality()`
+See [demo.py](demo.py) for a demo, or see the following documentation.
 
-Get punctuality information about a certain S-Bahn line. See [below](###example-output-of-`mvvlive.get_punctuality()`) for example output.
+## `MVVLive.punctuality`
+
+Get punctuality information about a certain S-Bahn line. See [below](#example-output-of-mvvlivepunctuality) for example output.
+Update this information by executing `MVVLive.update_punctuality()`.
 
 ```python
 import MVVLive
-import json
 
-live = MVVLive.MVVLive()
-
+# Initialize MVVLive object with line
 line = "S3"
-live.get_punctuality(line)
+live = MVVLive.MVVLive(line=line)
+
+# Print punctuality
+print(live.punctuality)
 ```
 
-### `MVVLive.get_serving_lines()`
+## `MVVLive.serving_lines`
 
-Get information about all the lines served at a certain public transport stop. See [below](###example-output-of-`mvvlive.get_serving_lines()`) for example output.
+Get information about all the lines served at a certain public transport stop. See [below](#example-output-of-mvvliveserving_lines) for example output.
+Update this information by executing `MVVLive.update_serving_lines()`.
 
 ```python
 import MVVLive
 import json
 
-live = MVVLive.MVVLive()
-
+# Initialize MVVLive object with stop ID
 stop_id = "de:09184:460"  # stop ID of "Garching Forschungszentrum"
-whitelist = {
-    "lineNumber": ["U6", "230", "X201"],
-}
-serving_lines = live.get_serving_lines(stop_name=stop, stop_id=None, whitelist=whitelist, blacklist=None)
+live = MVVLive.MVVLive(stop_id=stop_id)
+
+serving_lines = live.serving_lines
+
+# Print serving lines in a nicely formatted way.
+print(json.dumps(serving_lines, indent=4, ensure_ascii=False))
 ```
 
-Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `serving_lines` list, except the value must be a list of values (e.g., `"lineNumber": ["U6", "230", "X201"]` instead of `"lineNumber": "U6"`).
+Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `serving_lines` list, except the value must be a list of values (e.g., `"product": ["REGIONAL_BUS"]` instead of `"product": "REGIONAL_BUS"`).
 You can either provide a `stop_name` or a `stop_id`, where the latter is better as you can ensure the right stop is 
 determined. Look it up at https://www.mvg.de/api/fahrinfo/location/queryWeb?q=YOUR_STOP_NAME.
 
-### `MVVLive.get_departures()`
+## `MVVLive.departures`
 
-Get information about all departures at a certain public transport stop. See [below](###example-output-of-`mvvlive.get_departures()`) for example output.
+Get information about all departures at a certain public transport stop. See [below](#example-output-of-mvvlivedepartures) for example output.
+Update this information by executing `MVVLive.update_departures()`.
 
 ```python
 import MVVLive
 import json
 
-live = MVVLive.MVVLive()
+# Initialize MVVLive object with stop name
+stop_name = "Unterhaching"
+live = MVVLive.MVVLive(stop_name=stop_name)
 
-stop = "Höllriegelskreuth"
-blacklist = {
-    "product": ["REGIONAL_BUS"],
-}
-departures = live.get_departures(stop_name=stop, stop_id=None, whitelist=None, blacklist=blacklist)
+departures = live.departures
+
+# Print serving lines in a nicely formatted way.
+print(json.dumps(departures, indent=4, ensure_ascii=False))
 ```
 
-Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `departures` list, except the value must be a list of values (e.g., `"label": ["U6", "230", "X201"]` instead of `"label": "U6"`).
+Both blacklist and whitelist can be provided. The must be a dict in the same format as an element from the `departures` list, except the value must be a list of values (e.g., `"destination": ["Deisenhofen", "Holzkirchen"]` instead of `"destination": "Deisenhofen"`).
 You can either provide a `stop_name` or a `stop_id`, where the latter is better as you can ensure the right stop is 
 determined. Look it up at https://www.mvg.de/api/fahrinfo/location/queryWeb?q=YOUR_STOP_NAME.
+
+##  `MVVlive.filter()`
+
+Filters data (servingLines or departures) according to a whitelist or blacklist.
+
+```python
+import MVVLive
+import json
+
+# Initialize MVVLive object with stop name
+stop_name = "Unterhaching"
+live = MVVLive.MVVLive(stop_name=stop_name)
+
+# Filter departures
+in_30_min = round((time()+30*60)*1000)
+blacklist_departures = {
+    "destination": ["Deisenhofen", "Holzkirchen"],
+}
+whitelist_departures = {
+    "label": ["S3"],
+    "departureTime": range(in_30_min),
+}
+departures = live.filter(live.departures, whitelist=whitelist_departures, blacklist=blacklist_departures)
+
+# Print serving lines in a nicely formatted way.
+print(json.dumps(departures, indent=4, ensure_ascii=False))
+```
+
+## `MVVLive.update_punctuality()`
+
+Updates the punctuality information.
+
+## `MVVLive.update_serving_lines()`
+
+Updates the serving lines information.
+
+## `MVVLive.update_departures()`
+
+Updates the departures information.
 
 ## Example Output
 
-### Example Output of `MVVLive.get_punctuality()`
+### Example Output of `MVVLive.punctuality`
 
 ```python
 100
 ```
 
-### Example Output of `MVVLive.get_serving_lines()`
+### Example Output of `MVVLive.serving_lines`
 
 ```python
 [
@@ -136,7 +183,7 @@ determined. Look it up at https://www.mvg.de/api/fahrinfo/location/queryWeb?q=YO
 ]
 ```
 
-### Example Output of `MVVLive.get_departures()`
+### Example Output of `MVVLive.departures`
 
 ```python
 [
