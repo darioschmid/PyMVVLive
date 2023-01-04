@@ -12,7 +12,7 @@ Note that this package only provides **live** data. For information on planned t
 If you have any idea or further information about how to retrieve S-Bahn punctuality information that does **not** rely on website scraping like it does now (maybe some API), please contact me or contribute to this project.
 
 
-**Disclaimer**: This project is **not** associated with neither MVV, nor MVG, nor Deutsche Bahn.
+**Disclaimer**: This project is **not** associated with MVV, MVG, or Deutsche Bahn.
 
 
 Installation
@@ -132,17 +132,17 @@ Updates the departures information.
 
 ### Example Output of `MVVLive.punctuality`
 
-```python
+```
 100
 ```
 
 ### Example Output of `MVVLive.serving_lines`
 
-```python
+```json
 [
     {
         "destination": "Deisenhofen",
-        "sev": False,
+        "sev": false,
         "network": "ddb",
         "product": "SBAHN",
         "lineNumber": "S3",
@@ -150,7 +150,7 @@ Updates the departures information.
     },
     {
         "destination": "Messestadt Ost",
-        "sev": False,
+        "sev": false,
         "network": "swm",
         "product": "UBAHN",
         "lineNumber": "U2",
@@ -158,7 +158,7 @@ Updates the departures information.
     },
     {
         "destination": "Sendlinger Tor U",
-        "sev": False,
+        "sev": false,
         "network": "swm",
         "product": "TRAM",
         "lineNumber": "17",
@@ -166,7 +166,7 @@ Updates the departures information.
     },
     {
         "destination": "Ackermannbogen via Münchner Freiheit U",
-        "sev": False,
+        "sev": false,
         "network": "swm",
         "product": "BUS",
         "lineNumber": "59",
@@ -174,7 +174,7 @@ Updates the departures information.
     },
     {
         "destination": "Winning, Riegerweg/Altersheim",
-        "sev": False,
+        "sev": false,
         "network": "mvv",
         "product": "REGIONAL_BUS",
         "lineNumber": "220",
@@ -185,19 +185,19 @@ Updates the departures information.
 
 ### Example Output of `MVVLive.departures`
 
-```python
+```json
 [
     {
         "departureTime": 1672060500000,
         "product": "TRAM",
         "label": "17",
         "destination": "Sendlinger Tor U",
-        "live": False,
+        "live": false,
         "delay": 0,
-        "cancelled": False,
+        "cancelled": false,
         "lineBackgroundColor": "#ea4029",
         "departureId": "07e4533ca5585437c959fdeb9980e3d1#1672060500000#de:09162:6",
-        "sev": False,
+        "sev": false,
         "platform": "",
         "stopPositionNumber": 0,
         "infoMessages": []
@@ -207,12 +207,12 @@ Updates the departures information.
         "product": "UBAHN",
         "label": "U2",
         "destination": "Messestadt Ost",
-        "live": False,
+        "live": false,
         "delay": 0,
-        "cancelled": False,
+        "cancelled": false,
         "lineBackgroundColor": "#dd3d4d",
         "departureId": "5c89169b4eac9e688234efa99532f10c#1672060920000#de:09162:6",
-        "sev": False,
+        "sev": false,
         "platform": "U2/8 Gleis 2",
         "stopPositionNumber": 0,
         "infoMessages": []
@@ -222,12 +222,12 @@ Updates the departures information.
         "product": "SBAHN",
         "label": "S3",
         "destination": "Deisenhofen",
-        "live": False,
+        "live": false,
         "delay": 1,
-        "cancelled": False,
+        "cancelled": false,
         "lineBackgroundColor": "#942d8d",
         "departureId": "0a78778e46079d11830c36fca7566b36#1672060980000#de:09162:6",
-        "sev": False,
+        "sev": false,
         "platform": "1",
         "stopPositionNumber": 0,
         "infoMessages": [
@@ -239,12 +239,12 @@ Updates the departures information.
         "product": "BUS",
         "label": "59",
         "destination": "Ackermannbogen via Münchner Freiheit U",
-        "live": False,
+        "live": false,
         "delay": 0,
-        "cancelled": False,
+        "cancelled": false,
         "lineBackgroundColor": "#0d5c70",
         "departureId": "0b10f46a89dc6a150f5db24e7ca26f14#1672060680000#de:09162:1110",
-        "sev": False,
+        "sev": false,
         "platform": "Pos. 7",
         "stopPositionNumber": 7,
         "infoMessages": []
@@ -254,12 +254,12 @@ Updates the departures information.
         "product": "REGIONAL_BUS",
         "label": "220",
         "destination": "Winning, Riegerweg/Altersheim",
-        "live": False,
+        "live": false,
         "delay": 0,
-        "cancelled": False,
+        "cancelled": false,
         "lineBackgroundColor": "#0d5c70",
         "departureId": "14d5f38f4e1169b03e25752dd25259f5#1672061100000#de:09162:1110",
-        "sev": False,
+        "sev": false,
         "platform": "Pos. 10",
         "stopPositionNumber": 10,
         "infoMessages": []
