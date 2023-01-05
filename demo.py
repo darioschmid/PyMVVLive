@@ -40,7 +40,7 @@ print(f"{stop_id} serving lines: {json.dumps(serving_lines, indent=4, ensure_asc
 
 """
 Departures Demo
-Get all departures from "Unterhaching" station that are in the next 10 minutes and not from the lines 217, 220 or 221.
+Get all departures from "Unterhaching" station that are in the next 30 minutes and not from the lines 217, 220 or 221.
 """
 
 # Initialize MVVLive object with stop name
