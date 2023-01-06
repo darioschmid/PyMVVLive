@@ -96,6 +96,7 @@ Filters data (servingLines or departures) according to a whitelist or blacklist.
 ```python
 import MVVLive
 import json
+from time import time
 
 # Initialize MVVLive object with stop name
 stop_name = "Unterhaching"
