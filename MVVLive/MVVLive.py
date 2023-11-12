@@ -1,53 +1,61 @@
 import requests
 from bs4 import BeautifulSoup
 
+STATION_URL = """https://fahrinfo-backend-prod.web.azrapp.swm.de/rest/v2/station"""
+DEPARTURE_URL = """https://fahrinfo-backend-prod.web.azrapp.swm.de/rest/v2/departure"""
+PUNCTUALITY_URL = "http://s-bahn-muenchen.hafas.de/bin/540/query.exe/dn?statusWidget"
+
+
+def get_stops(api_key: str):
+    """Return a dictionary of all stops and their available information. Use
+        this function to determine the id of your stop of interest.
+
+    :return: Dict of all available stops.
+    """
+
+    headers = {'api_key': api_key}
+    response = requests.get(STATION_URL, headers=headers)
+    if response.status_code != 200:
+        raise ConnectionError(
+            f"Error while fetching data from MVV website. Status code: {response.status_code}"
+        )
+
+    return response.json()
+
 
 class MVVLive:
-    def __init__(self, stop_name=None, stop_id=None, line=None):
+    def __init__(self, api_key: str = None, stop_id: str = None,
+                 line: str = None):
         """Initializes MVVLive object.
 
-        Args:
-            stop_name (str, optional): Stop name. Will be used to find stop id. To be sure the correct stop is identified, look it up yourself at https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}. Must be provided if stop_id is not provided. Will be ignored if stop_id is provided. Defaults to None.
-
-            stop_id (str, optional): Stop ID according to GTFS standard. Look up your stop's ID here: https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}. Examples are: "de:09162:2" for Marienplatz, "de:09162:6" for Hauptbahnhof, "de:09162:1" for Karlsplatz (Stachus), "de:09184:460" for Garching-Forschungszentrum, etc. Must be provided if stop_name is not provided. Defaults to None.
-
-            line (str): Name of S-Bahn line. Available lines are: "S1", "S2", "S3", "S4", "S6", "S7", "S8", "S20". Defaults to None.
+        :param stop_id (str, optional): Stop ID according to GTFS standard.
+            Look up your stop's ID here:
+            https://fahrinfo-backend-prod.web.azrapp.swm.de/rest/v2/station.
+            Examples are: "de:09162:2" for Marienplatz, "de:09162:6" for
+            Hauptbahnhof, "de:09162:1" for Karlsplatz (Stachus), "de:09184:460"
+            for Garching-Forschungszentrum, etc. Must be provided if stop_name
+            is not provided. Defaults to None.
+        :param line (str): Name of S-Bahn line. Available lines are: "S1",
+            "S2", "S3", "S4", "S6", "S7", "S8", "S20". Defaults to None.
         """
 
         # Set stop ID. Get it from stop name if not provided.
         self.stop_id = stop_id
-        if self.stop_id is None:
-            if stop_name is not None:
-                self.stop_id = self.determine_stop_id(stop_name)
 
         # Set line.
         self.line = line
 
+        # Set API key.
+        self.api_key = api_key
+
         # Update data and punctuality information.
-        self.update_data()
-        self.update_punctuality()
-    
-    def determine_stop_id(self, stop_name):
-        """Determines stop ID from stop name.
+        if self.stop_id:
+            self.update_departures()
+        if self.line:
+            self.update_punctuality()
 
-        Returns:
-            str: Stop ID.
-        """
-        stop_response = requests.get(f"https://www.mvg.de/api/fahrinfo/location/queryWeb?q={stop_name}")
-        if stop_response.status_code != 200:
-            raise ConnectionError(
-                f"Error while fetching data from MVV website. Status code: {stop_response.status_code}"
-            )
-        stop_id = stop_response.json()['locations'][0]['id']
-        return stop_id
-
-    def update_data(self):
-        """Updates data, which is a dictionary of the following format:
-        {
-            "servingLines": servingLines,
-            "departures": departures
-        }
-        where both servingLines and departures is a list of dicts.
+    def update_departures(self):
+        """Updates list of departures.
 
         Raises:
             ValueError: If neither stop_name nor stop_id is provided.
@@ -55,24 +63,18 @@ class MVVLive:
         """
 
         if self.stop_id is None:
-            #self.data = None
-            return
-        
-        data_response = requests.get(f"https://www.mvg.de/api/fahrinfo/departure/{self.stop_id}?footway=0")
+            raise ValueError('stop_id is not provided!')
+
+        headers = {'api_key': self.api_key}
+        params = {'globalId': self.stop_id}
+        data_response = requests.get(DEPARTURE_URL, headers=headers,
+                                     params=params)
         if data_response.status_code != 200:
             raise ConnectionError(
                 f"Error while fetching data from MVV website. Status code: {data_response.status_code}"
             )
-        self.data = data_response.json()
+        self.departures = data_response.json()
 
-        return
-
-    def update_serving_lines(self):
-        self.update_data()
-        return
-    
-    def update_departures(self):
-        self.update_data()
         return
 
     def update_punctuality(self):
@@ -85,8 +87,7 @@ class MVVLive:
         """
 
         if self.line is None:
-            #self.punctuality = None
-            return
+            raise ValueError('line is not provided!')
 
         line = self.line
 
@@ -99,8 +100,7 @@ class MVVLive:
 
         line_number = line[1:]
 
-        url = "http://s-bahn-muenchen.hafas.de/bin/540/query.exe/dn?statusWidget"
-        response = requests.get(url, timeout=20)
+        response = requests.get(PUNCTUALITY_URL, timeout=20)
         if response.status_code != 200:
             raise ConnectionError(
                 f"Error while fetching data from MVV website. Status code: {response.status_code}"
@@ -117,7 +117,7 @@ class MVVLive:
         if line_punctuality == "-":
             self.punctuality = line_punctuality
             return
-        
+
         # Formatting
         line_punctuality = line_punctuality.replace(" %", "")
         line_punctuality = int(line_punctuality)
@@ -125,34 +125,29 @@ class MVVLive:
         self.punctuality = line_punctuality
 
         return
-  
+
     def filter(self, data, whitelist=None, blacklist=None):
-        """Filters data (servingLines or departures) according to a whitelist or blacklist.
+        """Filters data (servingLines or departures) according to a whitelist
+            or blacklist.
 
         Args:
             data (list): List of data dicts, e.g. departures.
-            whitelist (dict, optional): Whitelist dict according to which will be filtered. Its values need to be lists.
-                                        See README.md for more details. Defaults to None.
-            blacklist (dict, optional): Blacklist dict according to which will be filtered. Its values need to be lists.
-                                        See README.md for more details. Defaults to None.
+            whitelist (dict, optional): Whitelist dict according to which will
+                be filtered. Its values need to be lists. See README.md for
+                more details. Defaults to None.
+            blacklist (dict, optional): Blacklist dict according to which will
+                be filtered. Its values need to be lists. See README.md for
+                more details. Defaults to None.
         Returns:
             dict: Returns filtered list data.
         """
 
         filtered_data = data
         if blacklist is not None:
-            filtered_data = [x for x in filtered_data if not any(x[key] in value for key, value in blacklist.items())]
+            filtered_data = [x for x in filtered_data if not any(
+                x[key] in value for key, value in blacklist.items())]
         if whitelist is not None:
-            filtered_data = [x for x in filtered_data if all(x[key] in value for key, value in whitelist.items())]
-        
+            filtered_data = [x for x in filtered_data if all(
+                x[key] in value for key, value in whitelist.items())]
+
         return filtered_data
-
-    @property
-    def departures(self):
-        """Returns a list of departure dicts."""
-        return self.data["departures"]
-
-    @property
-    def serving_lines(self):
-        """Returns a list of serving line dicts."""
-        return self.data["servingLines"]
