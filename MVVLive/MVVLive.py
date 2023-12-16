@@ -6,7 +6,7 @@ DEPARTURE_URL = """https://fahrinfo-backend-prod.web.azrapp.swm.de/rest/v2/depar
 PUNCTUALITY_URL = "http://s-bahn-muenchen.hafas.de/bin/540/query.exe/dn?statusWidget"
 
 
-def get_stops(api_key: str):
+def get_stops(api_key: str, timeout: int = 20):
     """Return a dictionary of all stops and their available information. Use
         this function to determine the id of your stop of interest.
 
@@ -14,7 +14,7 @@ def get_stops(api_key: str):
     """
 
     headers = {'api_key': api_key}
-    response = requests.get(STATION_URL, headers=headers)
+    response = requests.get(STATION_URL, headers=headers, timeout=timeout)
     if response.status_code != 200:
         raise ConnectionError(
             f"Error while fetching data from MVV website. Status code: {response.status_code}"
@@ -25,7 +25,7 @@ def get_stops(api_key: str):
 
 class MVVLive:
     def __init__(self, api_key: str = None, stop_id: str = None,
-                 line: str = None):
+                 line: str = None, timeout: int = 20):
         """Initializes MVVLive object.
 
         :param stop_id (str, optional): Stop ID according to GTFS standard.
@@ -38,6 +38,9 @@ class MVVLive:
         :param line (str): Name of S-Bahn line. Available lines are: "S1",
             "S2", "S3", "S4", "S6", "S7", "S8", "S20". Defaults to None.
         """
+
+        # Set timeout
+        self.timeout = timeout
 
         # Set stop ID. Get it from stop name if not provided.
         self.stop_id = stop_id
@@ -68,7 +71,7 @@ class MVVLive:
         headers = {'api_key': self.api_key}
         params = {'globalId': self.stop_id}
         data_response = requests.get(DEPARTURE_URL, headers=headers,
-                                     params=params)
+                                     params=params, timeout=self.timeout)
         if data_response.status_code != 200:
             raise ConnectionError(
                 f"Error while fetching data from MVV website. Status code: {data_response.status_code}"
@@ -100,7 +103,7 @@ class MVVLive:
 
         line_number = line[1:]
 
-        response = requests.get(PUNCTUALITY_URL, timeout=20)
+        response = requests.get(PUNCTUALITY_URL, timeout=self.timeout)
         if response.status_code != 200:
             raise ConnectionError(
                 f"Error while fetching data from MVV website. Status code: {response.status_code}"
