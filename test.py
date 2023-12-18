@@ -29,3 +29,10 @@ def test_punctuality():
     live_instance.update_punctuality()
     punctuality = live_instance.punctuality
     print("punctuality received.")
+
+
+def test_messages():
+    live_instance = MVVLive.MVVLive(api_key=API_KEY)
+    live_instance.update_messages()
+    messages = live_instance.messages
+    print("punctuality received.")

@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 STATION_URL = """https://fahrinfo-backend-prod.web.azrapp.swm.de/rest/v2/station"""
 DEPARTURE_URL = """https://fahrinfo-backend-prod.web.azrapp.swm.de/rest/v2/departure"""
 PUNCTUALITY_URL = "http://s-bahn-muenchen.hafas.de/bin/540/query.exe/dn?statusWidget"
+MESSAGE_URL = """https://fahrinfo-backend-prod.web.azrapp.swm.de/rest/v2/message"""
 
 
 def get_stops(api_key: str, timeout: int = 20):
@@ -57,6 +58,8 @@ class MVVLive:
         if self.line:
             self.update_punctuality()
 
+        self.update_messages()
+
     def update_departures(self):
         """Updates list of departures.
 
@@ -74,7 +77,7 @@ class MVVLive:
                                      params=params, timeout=self.timeout)
         if data_response.status_code != 200:
             raise ConnectionError(
-                f"Error while fetching data from MVV website. Status code: {data_response.status_code}"
+                f"Error while fetching data from MVV API. Status code: {data_response.status_code}"
             )
         self.departures = data_response.json()
 
@@ -128,6 +131,20 @@ class MVVLive:
         self.punctuality = line_punctuality
 
         return
+
+    def update_messages(self):
+
+        headers = {'api_key': self.api_key}
+        data_response = requests.get(MESSAGE_URL, headers=headers,
+                                     timeout=self.timeout)
+        if data_response.status_code != 200:
+            raise ConnectionError(
+                f"Error while fetching data from MVV API. Status code: {data_response.status_code}"
+            )
+        self.messages = data_response.json()
+
+        return
+
 
     def filter(self, data, whitelist=None, blacklist=None):
         """Filters data (servingLines or departures) according to a whitelist
