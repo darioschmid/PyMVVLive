@@ -157,3 +157,6 @@ Updates the departures information. Gets executed on creation if `stop_id` is pr
     ...
 ]
 ```
+
+[//]: # (Build package: python setup.py sdist)
+[//]: # (# Push package to PyPi: twine upload dist/*)

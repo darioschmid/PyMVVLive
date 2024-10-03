@@ -58,7 +58,8 @@ class MVVLive:
         if self.line:
             self.update_punctuality()
 
-        self.update_messages()
+        if api_key is not None:
+            self.update_messages()
 
     def update_departures(self):
         """Updates list of departures.
